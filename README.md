@@ -1,5 +1,6 @@
 # FootSteps
 Android appliction for meeting up with friends via a map - class term project
+
 Led to a job offer with a few startups in Nashville.
 
 Video showing app at work
