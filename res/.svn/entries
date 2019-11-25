@@ -1,0 +1,68 @@
+10
+
+dir
+2
+https://palfinder.googlecode.com/svn/Footsteps/res
+https://palfinder.googlecode.com/svn
+
+
+
+2012-12-15T05:18:29.138102Z
+2
+alok.hota@vanderbilt.edu
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+c9dcf087-3f61-4e03-f5ab-33c66299be5a
+
+
+
+
+
+
+0
+
+drawable
+dir
+
+drawable-hdpi
+dir
+
+drawable-ldpi
+dir
+
+drawable-mdpi
+dir
+
+drawable-xhdpi
+dir
+
+layout
+dir
+
+menu
+dir
+
+values
+dir
+
+values-v11
+dir
+
+values-v14
+dir
+
+xml
+dir
+

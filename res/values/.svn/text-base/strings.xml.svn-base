@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="app_name">Footsteps</string>
+    <string name="edit_message">Enter a Message</string>
+    <string name="button_send">Send</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">PalFinder</string>
+    <string name="message">Message</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_display_message">My Message</string>
+    <string name="title_activity_get_friends">Friends List</string>
+    <string name="button_get_location">Get location</string>
+    <string name="title_activity_location_map">Location on Map</string>
+    <string name="signinlogo">This is Sign in Logo</string>
+    <string name="usernameT">username</string>
+    <string name="passwordT">password</string>
+    <string name="signinbutton">This is Sign in Button</string>
+    <string name="signupbutton">This is Sign up Button</string>
+
+</resources>

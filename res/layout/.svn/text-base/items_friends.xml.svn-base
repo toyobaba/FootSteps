@@ -1,0 +1,11 @@
+ <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+ 	xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frienditem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+    android:textColor="@color/friendsitem"
+    android:textSize="45dp" 
+ />
+

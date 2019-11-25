@@ -1,0 +1,238 @@
+package com.example.helloworld;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ParseException;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class FriendRequests extends ListActivity{
+@SuppressLint({ "NewApi", "NewApi" })
+
+	Person person;    
+    private String[] gottenr;
+    ArrayList<String> requests  = new ArrayList<String>();
+    int num;
+    int pos;
+    ListView root;
+    ArrayAdapter<String> arrayAdapter;
+    boolean received = false;
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+    	   super.onCreate(savedInstanceState);
+           Intent intent = getIntent();
+           person = new Person();
+           person = intent.getParcelableExtra("person parcel");
+    	   this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+           this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);           
+           setContentView(R.layout.friend_requests);   
+           
+           IntentFilter filter = new IntentFilter("android.person");
+           registerReceiver(receiver, filter);
+           received = false;          
+  	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    private final BroadcastReceiver receiver = new BroadcastReceiver()
+	{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("receiver", "received");
+			person = new Person();
+			person = intent.getParcelableExtra("person parcel");
+			if (!received)
+			{
+				received = true;
+				root = (ListView)findViewById(android.R.id.list);
+				gottenr= person.requests;	   
+	           
+				int num = gottenr.length;
+	           
+				for (int i= 0; i<num; i++){
+	        	   requests.add(gottenr[i]);
+				}           
+	           
+				arrayAdapter =   new ArrayAdapter<String>(getApplicationContext(),R.layout.items_friends, requests);
+				root.setAdapter(arrayAdapter);             
+	          
+			
+			}	
+		}
+	};
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.addToDictionary:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    protected void onListItemClick(ListView root, View v, int position, long id) {
+        // TODO Auto-generated method stub
+        super.onListItemClick(root, v, position, id);
+        
+        final String name = requests.get(position);
+        pos = position;
+      
+        // set the message to display
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Yes button clicked
+                	new Asyncactivity().execute("accept", name);
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                	new Asyncactivity().execute("reject", name);
+                    //No button clicked
+                    break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Accept request from " + requests.get(position)+ "?").setPositiveButton("Yes", dialogClickListener)
+            .setNegativeButton("No", dialogClickListener).show();
+        
+
+    }
+    
+    private class Asyncactivity extends AsyncTask <String, Void, String> //1st - doinback, 2nd - progressupdate, 3rd - postexecute
+    {
+    	String action = null;
+    	
+    	protected String getText(HttpEntity entity) throws
+    	IllegalStateException, IOException
+    	{
+    		
+    		InputStream in  = entity.getContent();
+    		StringBuffer out = new StringBuffer();
+    		int n = 1;
+    		while (n>0)
+    		{
+    			byte[]b = new byte[4096];
+    			n = in.read(b);
+    			if (n>0) out.append(new String (b, 0, n));
+    		}
+    		return out.toString();
+    	}
+    	
+    	@Override
+    	protected String doInBackground(String... params)
+    	{
+    		String text = null;
+    		HttpClient client = new DefaultHttpClient();
+    		HttpPost poster = new HttpPost("http://ec2-23-22-156-79.compute-1.amazonaws.com/phpfile.php");
+    		ArrayList<NameValuePair> list = new ArrayList<NameValuePair>();
+    		action = params[0];
+    		
+    			
+    		NameValuePair user = new BasicNameValuePair("mainuser", person.mainuser);
+    		NameValuePair friend = new BasicNameValuePair("username", params[1]);
+    		NameValuePair act = new BasicNameValuePair("action", params[0]);
+    		list.add(user); list.add(friend); list.add(act);
+    		
+    		try
+			{
+				poster.setEntity(new UrlEncodedFormEntity(list)); //unsupported encoding exception
+				HttpResponse response = client.execute(poster);
+				HttpEntity entity = response.getEntity();
+				text = getText(entity);
+			}
+			catch (Exception e)
+			{
+				Log.d("main activity", e.toString());
+				return e.getLocalizedMessage();
+			}
+    		return text;
+    	}
+    	
+    	
+		protected void onPostExecute(String results)
+    	{
+			//et.setText(results);
+			String message;
+			String error;
+			String username = null;
+			
+			if (results!=null)
+    		{
+				try
+    			{
+    				//fetched objects should be context based; i.e. they should work based on action
+    				//make action a global variable. 
+					JSONObject json_data = new JSONObject(results);
+					message = json_data.getString("message");
+					error = json_data.getString("error");
+					if (message.equals(""))
+						Toast.makeText(getApplicationContext(),error,Toast.LENGTH_LONG).show();
+					else
+					{
+						Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+						requests.remove(pos);
+						
+						root = (ListView)findViewById(android.R.id.list);				          	   
+				           
+				           arrayAdapter =      
+				           new ArrayAdapter<String>(getApplicationContext(),R.layout.items_friends, requests);	
+				           root.setAdapter(null);
+				           root.setAdapter(arrayAdapter);				           
+					}
+							
+    			}
+				catch(JSONException e)
+				{
+					Log.d("main activity", e.toString());
+				}
+				
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+				}
+
+    		}
+    	}
+    }
+  }

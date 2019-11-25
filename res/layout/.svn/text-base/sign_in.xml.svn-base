@@ -1,0 +1,69 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:contentDescription="@string/signinlogo"
+        android:src="@drawable/logo" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ems="10"
+        android:hint="@string/usernameT"
+        android:inputType="textNoSuggestions" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ems="10"
+        android:hint="@string/passwordT"
+        android:inputType="textPassword" />
+
+    <RelativeLayout
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.12"
+        android:layout_gravity="center_horizontal" >
+
+        <ImageButton
+            android:id="@+id/Signinbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/Signupbutton"
+            android:background="@null"
+            android:contentDescription="@string/signinbutton"
+            android:onClick="signInside"
+            android:src="@drawable/sign_in_xml_button" />
+
+        <ImageButton
+            android:id="@+id/Signupbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="36dp"
+            android:background="@null"
+            android:contentDescription="@string/signupbutton"
+            android:onClick="signup"
+            android:src="@drawable/signup_xml_button" />
+
+    </RelativeLayout>
+
+</LinearLayout>
